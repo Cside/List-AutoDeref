@@ -26,8 +26,11 @@ sub pop (\[$@]) {
 }
 
 sub shift (;\[$@]) {
-    if (!@_) {
-        # on subroutine
+    if (@_) {
+        my ($arrayref) = _to_arrayref(CORE::shift);
+        CORE::shift @$arrayref;
+    } else {
+        # in subroutine
         if (defined(scalar caller(1))) {
             {package DB; () = caller(1)}
             CORE::shift @DB::args;
@@ -37,9 +40,6 @@ sub shift (;\[$@]) {
             no strict 'refs';
             CORE::shift @{"$pkg\::ARGV"};
         }
-    } else {
-        my ($arrayref) = _to_arrayref(CORE::shift);
-        CORE::shift @$arrayref;
     }
 }
 
