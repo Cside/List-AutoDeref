@@ -55,6 +55,52 @@ subtest shift => sub {
     is_deeply2($arrayref, [2..3]);
 };
 
+subtest splice => sub {
+    {
+        my @array    =  1..5;
+        my $arrayref = [1..5];
+        splice @array;
+        splice $arrayref;
+        is_deeply2(\@array,   []);
+        is_deeply2($arrayref, []);
+    }
+    {
+        my @array    =  1..5;
+        my $arrayref = [1..5];
+        splice @array,    3;
+        splice $arrayref, 3;
+        is_deeply2(\@array,   [1..3]);
+        is_deeply2($arrayref, [1..3]);
+    }
+    {
+        my @array    =  1..5;
+        my $arrayref = [1..5];
+        splice @array,    2, 2;
+        splice $arrayref, 2, 2;
+        is_deeply2(\@array,   [1,2,5]);
+        is_deeply2($arrayref, [1,2,5]);
+    }
+    {
+        my @array    =  1..5;
+        my $arrayref = [1..5];
+        splice @array,    2, 1, -3;
+        splice $arrayref, 2, 1, -3;
+        is_deeply2(\@array,   [1, 2, -3, 4, 5]);
+        is_deeply2($arrayref, [1, 2, -3, 4, 5]);
+    }
+    {
+        my @array    =  1..5;
+        my $arrayref = [1..5];
+        splice @array,    2, 2, -3, -4;
+        splice $arrayref, 2, 2, -3, -4;
+        is_deeply2(\@array,   [1, 2, -3, -4, 5]);
+        is_deeply2($arrayref, [1, 2, -3, -4, 5]);
+    }
+};
+
+
+
+
 sub is_deeply2 {
     my ($got, $expected) = @_;
     is dump($got), dump($expected);

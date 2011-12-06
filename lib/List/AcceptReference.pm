@@ -4,7 +4,7 @@ use strict;
 use warnings;
 our $VERSION = '0.01';
 use parent qw/Exporter/;
-our @EXPORT_OK = qw/pop push shift unshift/;
+our @EXPORT_OK = qw/pop push shift unshift splice/;
 our %EXPORT_TAGS = (
     all => \@EXPORT_OK,
 );
@@ -28,6 +28,23 @@ sub pop (\[$@]) {
 sub shift (\[$@]) {
     my ($arrayref) = _to_arrayref(shift);
     CORE::shift @$arrayref;
+}
+
+sub splice (\[$@];$$@) {
+    my ($arrayref, $offset, $length, @list) = (_to_arrayref(CORE::shift), @_);
+    
+    if (!defined($offset)) {
+        CORE::splice @$arrayref;
+
+    } elsif (!defined($length)) {
+        CORE::splice @$arrayref, $offset;
+
+    } elsif (!@list) {
+        CORE::splice @$arrayref, $offset, $length;
+        
+    } else {
+        CORE::splice @$arrayref, $offset, $length, @list;
+    }
 }
 
 sub _to_arrayref {
