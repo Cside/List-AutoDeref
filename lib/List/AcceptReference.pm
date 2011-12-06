@@ -11,27 +11,27 @@ our %EXPORT_TAGS = (
 use subs @EXPORT_OK;
 
 sub push (\[$@]@) {
-    my ($arrayref, @list) = @_;
-    $arrayref = $$arrayref if (ref($arrayref) eq 'REF');
+    my ($arrayref, @list) = (_to_arrayref(shift), @_);
     CORE::push @$arrayref, @list;
 }
 
 sub unshift (\[$@]@) {
-    my ($arrayref, @list) = @_;
-    $arrayref = $$arrayref if (ref($arrayref) eq 'REF');
+    my ($arrayref, @list) = (_to_arrayref(shift), @_);
     CORE::unshift @$arrayref, @list;
 }
 
 sub pop (\[$@]) {
-    my ($arrayref, @list) = @_;
-    $arrayref = $$arrayref if (ref($arrayref) eq 'REF');
+    my ($arrayref) = _to_arrayref(shift);
     CORE::pop @$arrayref;
 }
 
 sub shift (\[$@]) {
-    my ($arrayref, @list) = @_;
-    $arrayref = $$arrayref if (ref($arrayref) eq 'REF');
+    my ($arrayref) = _to_arrayref(shift);
     CORE::shift @$arrayref;
+}
+
+sub _to_arrayref {
+    (ref($_[0]) eq 'REF') ? ${$_[0]} : $_[0];
 }
 
 1;
