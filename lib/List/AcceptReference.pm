@@ -2,16 +2,44 @@ package List::AcceptReference;
 use 5.008_001;
 use strict;
 use warnings;
-
 our $VERSION = '0.01';
+use parent qw/Exporter/;
+our @EXPORT_OK = qw/pop push shift unshift/;
+our %EXPORT_TAGS = (
+    all => \@EXPORT_OK,
+);
+use subs @EXPORT_OK;
 
+sub push (\[$@]@) {
+    my ($arrayref, @list) = @_;
+    $arrayref = $$arrayref if (ref($arrayref) eq 'REF');
+    CORE::push @$arrayref, @list;
+}
+
+sub unshift (\[$@]@) {
+    my ($arrayref, @list) = @_;
+    $arrayref = $$arrayref if (ref($arrayref) eq 'REF');
+    CORE::unshift @$arrayref, @list;
+}
+
+sub pop (\[$@]) {
+    my ($arrayref, @list) = @_;
+    $arrayref = $$arrayref if (ref($arrayref) eq 'REF');
+    CORE::pop @$arrayref;
+}
+
+sub shift (\[$@]) {
+    my ($arrayref, @list) = @_;
+    $arrayref = $$arrayref if (ref($arrayref) eq 'REF');
+    CORE::shift @$arrayref;
+}
 
 1;
 __END__
 
 =head1 NAME
 
-List::AcceptReference - Perl extention to do something
+List::AcceptReference - enable builtin functions that operate on array or hash containers to accept array or hash references
 
 =head1 VERSION
 
@@ -19,7 +47,14 @@ This document describes List::AcceptReference version 0.01.
 
 =head1 SYNOPSIS
 
-    use List::AcceptReference;
+    use List::AcceptReference qw/:all/;
+
+    my $arrayref = [1..3];
+
+    push    $arrayref, 4;
+    unshift $arrayref, 5;
+    pop   $arrayref;
+    shift $arrayref;
 
 =head1 DESCRIPTION
 
