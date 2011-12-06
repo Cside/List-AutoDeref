@@ -48,12 +48,22 @@ subtest pop => sub {
 subtest shift => sub {
     my @array    =  1..3;
     my $arrayref = [1..3];
-    
+
     shift @array;
     shift $arrayref;
     is_deeply2(\@array,   [2..3]);
     is_deeply2($arrayref, [2..3]);
+
+    my $func = sub { shift };
+    is $func->('arg'), 'arg';
+    #goto TEST_ARGV;
 };
+#TEST_ARGV: {
+#    local @ARGV = qw/arg1 arg2/;
+#    my $first_argv = shift;
+#    warn '=========';
+#    is $first_argv, 'arg1';
+#}
 
 subtest splice => sub {
     {
@@ -97,9 +107,6 @@ subtest splice => sub {
         is_deeply2($arrayref, [1, 2, -3, -4, 5]);
     }
 };
-
-
-
 
 sub is_deeply2 {
     my ($got, $expected) = @_;

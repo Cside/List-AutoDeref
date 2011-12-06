@@ -11,23 +11,36 @@ our %EXPORT_TAGS = (
 use subs @EXPORT_OK;
 
 sub push (\[$@]@) {
-    my ($arrayref, @list) = (_to_arrayref(shift), @_);
+    my ($arrayref, @list) = (_to_arrayref(CORE::shift), @_);
     CORE::push @$arrayref, @list;
 }
 
 sub unshift (\[$@]@) {
-    my ($arrayref, @list) = (_to_arrayref(shift), @_);
+    my ($arrayref, @list) = (_to_arrayref(CORE::shift), @_);
     CORE::unshift @$arrayref, @list;
 }
 
 sub pop (\[$@]) {
-    my ($arrayref) = _to_arrayref(shift);
+    my ($arrayref) = _to_arrayref(CORE::shift);
     CORE::pop @$arrayref;
 }
 
-sub shift (\[$@]) {
-    my ($arrayref) = _to_arrayref(shift);
-    CORE::shift @$arrayref;
+sub shift (;\[$@]) {
+    if (!@_) {
+        # on subroutine
+        if (defined(scalar caller(1))) {
+            {package DB; () = caller(1)}
+            CORE::shift @DB::args;
+
+        } else {
+            my $pkg = scalar caller(0);
+            no strict 'refs';
+            CORE::shift @{"$pkg\::ARGV"};
+        }
+    } else {
+        my ($arrayref) = _to_arrayref(CORE::shift);
+        CORE::shift @$arrayref;
+    }
 }
 
 sub splice (\[$@];$$@) {
