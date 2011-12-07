@@ -83,20 +83,12 @@ This document describes List::AcceptReference version 0.01.
 
     push    $arrayref, 4;
     unshift $arrayref, 5;
-    pop   $arrayref;
-    shift $arrayref;
+    pop     $arrayref;
+    shift   $arrayref;
 
 =head1 DESCRIPTION
 
-# TODO
-
-=head1 INTERFACE
-
-=head2 Functions
-
-=head3 C<< hello() >>
-
-# TODO
+This module enables builtin functions that operate on array or hash containers to accept array or hash references
 
 =head1 DEPENDENCIES
 
