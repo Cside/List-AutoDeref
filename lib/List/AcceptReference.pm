@@ -4,25 +4,25 @@ use strict;
 use warnings;
 our $VERSION = '0.01';
 use parent qw/Exporter/;
-our @EXPORT_OK = qw/pop push shift unshift splice/;
+our @EXPORT_OK = qw/pop push shift unshift splice keys values each/;
 our %EXPORT_TAGS = (
     all => \@EXPORT_OK,
 );
 use subs @EXPORT_OK;
 
 sub push (\[$@]@) {
-    my ($arrayref, @list) = (_to_arrayref(CORE::shift), @_);
+    my ($arrayref, @list) = (_to_listref(CORE::shift), @_);
     CORE::push @$arrayref, @list;
 }
 
 sub unshift (\[$@]@) {
-    my ($arrayref, @list) = (_to_arrayref(CORE::shift), @_);
+    my ($arrayref, @list) = (_to_listref(CORE::shift), @_);
     CORE::unshift @$arrayref, @list;
 }
 
 sub pop (;\[$@]) {
     if (@_) {
-        my ($arrayref) = _to_arrayref(CORE::pop);
+        my ($arrayref) = _to_listref(CORE::pop);
         CORE::pop @$arrayref;
     } else {
         # in subroutine
@@ -40,7 +40,7 @@ sub pop (;\[$@]) {
 
 sub shift (;\[$@]) {
     if (@_) {
-        my ($arrayref) = _to_arrayref(CORE::shift);
+        my ($arrayref) = _to_listref(CORE::shift);
         CORE::shift @$arrayref;
     } else {
         # in subroutine
@@ -57,7 +57,7 @@ sub shift (;\[$@]) {
 }
 
 sub splice (\[$@];$$@) {
-    my ($arrayref, $offset, $length, @list) = (_to_arrayref(CORE::shift), @_);
+    my ($arrayref, $offset, $length, @list) = (_to_listref(CORE::shift), @_);
     
     if (!defined($offset)) {
         CORE::splice @$arrayref;
@@ -73,7 +73,24 @@ sub splice (\[$@];$$@) {
     }
 }
 
-sub _to_arrayref {
+sub keys (\[$@%]) {
+    my ($listref) = _to_listref(CORE::shift);
+    ref($listref) eq 'HASH' ? CORE::keys %$listref
+                            : CORE::keys @$listref;
+}
+sub values (\[$@%]) {
+    my ($listref) = _to_listref(CORE::shift);
+    ref($listref) eq 'HASH' ? CORE::values %$listref
+                            : CORE::values @$listref;
+}
+
+sub each (\[$@%]) {
+    my ($listref) = _to_listref(CORE::shift);
+    ref($listref) eq 'HASH' ? CORE::each %$listref
+                            : CORE::each @$listref;
+}
+
+sub _to_listref {
     (ref($_[0]) eq 'REF') ? ${$_[0]} : $_[0];
 }
 
