@@ -20,9 +20,22 @@ sub unshift (\[$@]@) {
     CORE::unshift @$arrayref, @list;
 }
 
-sub pop (\[$@]) {
-    my ($arrayref) = _to_arrayref(CORE::shift);
-    CORE::pop @$arrayref;
+sub pop (;\[$@]) {
+    if (@_) {
+        my ($arrayref) = _to_arrayref(CORE::pop);
+        CORE::pop @$arrayref;
+    } else {
+        # in subroutine
+        if (defined(scalar caller(1))) {
+            {package DB; () = caller(1)}
+            CORE::pop @DB::args;
+
+        } else {
+            my $pkg = scalar caller(0);
+            no strict 'refs';
+            CORE::pop @{"$pkg\::ARGV"};
+        }
+    }
 }
 
 sub shift (;\[$@]) {
