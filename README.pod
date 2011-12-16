@@ -1,1 +1,1 @@
-lib/List/AcceptReference.pm
+lib/List/AutoDeref.pm
