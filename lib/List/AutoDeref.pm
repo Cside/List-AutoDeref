@@ -1,8 +1,8 @@
-package List::AcceptReference;
+package List::AutoDeref;
 use 5.008_001;
 use strict;
 use warnings;
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 use parent qw/Exporter/;
 our @EXPORT_OK = qw/pop push shift unshift splice keys values each/;
 our %EXPORT_TAGS = (
@@ -99,15 +99,15 @@ __END__
 
 =head1 NAME
 
-List::AcceptReference - enable builtin functions that operate on array or hash containers to accept array or hash references
+List::AutoDeref - enable builtin functions that operate on array or hash containers to accept array or hash references
 
 =head1 VERSION
 
-This document describes List::AcceptReference version 0.01.
+This document describes List::AutoDeref version 0.01.
 
 =head1 SYNOPSIS
 
-    use List::AcceptReference qw/:all/;
+    use List::AutoDeref qw/:all/;
 
     my $arrayref = [1..3];
 

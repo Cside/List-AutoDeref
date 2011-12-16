@@ -1,4 +1,4 @@
-# for List-AcceptReference
+# for List-AutoDeref
 # Makefile.PL
 Module::Install
 Module::Install::AuthorTests

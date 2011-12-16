@@ -3,7 +3,7 @@ use strict;
 use Test::More tests => 1;
 
 BEGIN {
-    use_ok 'List::AcceptReference';
+    use_ok 'List::AutoDeref';
 }
 
-diag "Testing List::AcceptReference/$List::AcceptReference::VERSION";
+diag "Testing List::AutoDeref/$List::AutoDeref::VERSION";

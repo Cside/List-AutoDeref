@@ -19,7 +19,7 @@ all_pod_files_spelling_ok('lib');
 __DATA__
 Hiroki Honda (Cside)
 cside.story@gmail.com
-List::AcceptReference
+List::AutoDeref
 
 # computer terms
 API

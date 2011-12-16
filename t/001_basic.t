@@ -3,7 +3,7 @@ use strict;
 use Test::More;
 use Data::Dump qw/dump/;
 
-use List::AcceptReference qw/:all/;
+use List::AutoDeref qw/:all/;
 
 subtest push => sub {
     my @array    =  1..3;
