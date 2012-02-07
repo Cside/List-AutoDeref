@@ -132,11 +132,7 @@ __END__
 
 =head1 NAME
 
-List::AutoDeref - enable builtin functions that operate on array or hash containers to accept array or hash references
-
-=head1 VERSION
-
-This document describes List::AutoDeref version 0.01.
+List::AutoDeref - Enables builtin functions that operate on (arrayr|hash) to accept (array|hash) refs in Perl version prior to 5.14.0.
 
 =head1 SYNOPSIS
 
@@ -149,23 +145,56 @@ This document describes List::AutoDeref version 0.01.
     pop     $arrayref;
     shift   $arrayref;
 
+    no List::AutoDeref;    # cleanup
+    
+    push    $arrayref, 6;  #=> error
+
 =head1 DESCRIPTION
 
-This module enables builtin functions that operate on array or hash containers to accept array or hash references
+This Module enables builtin functions that operate on (arrayr|hash) to accept (array|hash) refs in Perl version prior to 5.14.0.
+In addition, it also enables some builtin functions not supported in 5.14.0 to accept refs.
 
-=head1 DEPENDENCIES
+=head1 FUNCTIONS
 
-Perl 5.8.1 or later.
+=over 4
 
-=head1 BUGS
+=item shift
 
-All complex software has bugs lurking in it, and this module is no
-exception. If you find a bug please either email me, or add the bug
-to cpan-RT.
+=item unshift
 
-=head1 SEE ALSO
+=item pop
 
-L<perl>
+=item push
+
+=item keys
+
+=item values
+
+=item each
+
+=item join
+
+=item map_array
+
+=item grep_array
+
+This module exports functions map and grep as these names because they can't be overridden.
+
+=back
+
+=head1 TAGS
+
+=over 4
+
+=item 5.14.0
+
+exports functions qw(pop push shift unshift splice keys values each).
+
+=item all
+
+exports functions qw(pop push shift unshift splice keys values each join map_array grep_array).
+
+=back
 
 =head1 AUTHOR
 
@@ -173,7 +202,7 @@ Hiroki Honda (Cside) E<lt>cside.story@gmail.comE<gt>
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright (c) 2011, Hiroki Honda (Cside). All rights reserved.
+Copyright (c) Hiroki Honda
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
