@@ -3,6 +3,8 @@ use strict;
 use Test::More;
 use Data::Dump qw/dump/;
 
+use FindBin qw/$Bin/;
+use lib "$Bin/../lib";
 use List::AutoDeref qw/:all/;
 
 subtest push => sub {
@@ -140,6 +142,17 @@ subtest each => sub {
     is_deeply2([sort_str(each @_hash   )], [sort_str(qw/1 Foo/)]);
     is_deeply2([sort_str(each $_hashref)], [sort_str(qw/0 foo/)]);
     is_deeply2([sort_str(each $_hashref)], [sort_str(qw/1 Foo/)]);
+};
+
+subtest join => sub {
+    my @strs    = qw/foo bar/;
+    my $strs    = [@strs];
+    my %strs    =  @strs;
+    my $strs_hr = {@strs};
+    is join('', @strs),    'foobar';
+    is join('', $strs),    'foobar';
+    is join('', %strs),    'foobar';
+    is join('', $strs_hr), 'foobar';
 };
 
 sub is_deeply2 {

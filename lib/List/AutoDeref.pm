@@ -4,7 +4,7 @@ use strict;
 use warnings;
 our $VERSION = '0.02';
 use parent qw/Exporter/;
-our @EXPORT_OK = qw/pop push shift unshift splice keys values each/;
+our @EXPORT_OK = qw/pop push shift unshift splice keys values each join/;
 our %EXPORT_TAGS = (
     all => \@EXPORT_OK,
 );
@@ -90,6 +90,12 @@ sub each (\[$@%]) {
     my ($list) = _to_ref(CORE::shift);
     ref($list) eq 'HASH' ? CORE::each %$list
                          : CORE::each @$list;
+}
+
+sub join ($\[$@%]) {
+    my ($expr, $list) = (CORE::shift, _to_ref(CORE::shift));
+    ref($list) eq 'HASH' ? CORE::join $expr, %$list
+                         : CORE::join $expr, @$list;
 }
 
 1;
