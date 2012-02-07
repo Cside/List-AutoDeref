@@ -155,6 +155,30 @@ subtest join => sub {
     is join('', $strs_hr), 'foobar';
 };
 
+subtest map_array => sub {
+    my @nums    = 0..5;
+    my $nums    = \@nums;
+    my %nums    =  @nums;
+    my $nums_hr = {@nums};
+
+    is_deeply2([sort_num(map_array {$_ + 1} @nums   )], [1..6]);
+    is_deeply2([sort_num(map_array {$_ + 1} $nums   )], [1..6]);
+    is_deeply2([sort_num(map_array {$_ + 1} %nums   )], [1..6]);
+    is_deeply2([sort_num(map_array {$_ + 1} $nums_hr)], [1..6]);
+};
+
+subtest grep_array => sub {
+    my @nums    = 0..5;
+    my $nums    = \@nums;
+    my %nums    =  @nums;
+    my $nums_hr = {@nums};
+
+    is_deeply2([sort_num(grep_array {$_ % 2 == 0} @nums   )], [0, 2, 4]);
+    is_deeply2([sort_num(grep_array {$_ % 2 == 0} $nums   )], [0, 2, 4]);
+    is_deeply2([sort_num(grep_array {$_ % 2 == 0} %nums   )], [0, 2, 4]);
+    is_deeply2([sort_num(grep_array {$_ % 2 == 0} $nums_hr)], [0, 2, 4]);
+};
+
 sub is_deeply2 {
     my ($got, $expected) = @_;
     is dump($got), dump($expected);
