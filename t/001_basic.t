@@ -7,6 +7,9 @@ use FindBin qw/$Bin/;
 use lib "$Bin/../lib";
 use List::AutoDeref qw/:all/;
 
+sub is_deeply2 { is dump($_[0]), dump($_[1]); }
+sub _sort { CORE::sort {$a cmp $b} @_ }
+
 subtest push => sub {
     my @array    =  1..3;
     my $arrayref = [1..3];
@@ -118,17 +121,17 @@ my $hashref = {foo => 'Foo', bar => 'Bar'};
 my @_hash    =  qw/foo Foo bar Bar/;
 my $_hashref = [qw/foo Foo bar Bar/];
 subtest keys => sub {
-    is_deeply2([sort_str(keys %hash    )], [sort_str(qw/foo bar/)]);
-    is_deeply2([sort_str(keys $hashref )], [sort_str(qw/foo bar/)]);
-    is_deeply2([sort_num(keys @_hash   )], [sort_num(0..3       )]);
-    is_deeply2([sort_num(keys $_hashref)], [sort_num(0..3       )]);
+    is_deeply2([_sort(keys %hash    )], [_sort(qw/foo bar/)]);
+    is_deeply2([_sort(keys $hashref )], [_sort(qw/foo bar/)]);
+    is_deeply2([_sort(keys @_hash   )], [_sort(0..3       )]);
+    is_deeply2([_sort(keys $_hashref)], [_sort(0..3       )]);
 };
 
 subtest values => sub {
-    is_deeply2([sort_str(values %hash    )], [sort_str(qw/Foo Bar/)]);
-    is_deeply2([sort_str(values $hashref )], [sort_str(qw/Foo Bar/)]);
-    is_deeply2([sort_str(values @_hash   )], [sort_str(@_hash     )]);
-    is_deeply2([sort_str(values $_hashref)], [sort_str(@_hash     )]);
+    is_deeply2([_sort(values %hash    )], [_sort(qw/Foo Bar/)]);
+    is_deeply2([_sort(values $hashref )], [_sort(qw/Foo Bar/)]);
+    is_deeply2([_sort(values @_hash   )], [_sort(@_hash     )]);
+    is_deeply2([_sort(values $_hashref)], [_sort(@_hash     )]);
 };
 
 subtest each => sub {
@@ -138,10 +141,10 @@ subtest each => sub {
     is_deeply2(\%got1, \%hash);
     is_deeply2(\%got1, $hashref);
     
-    is_deeply2([sort_str(each @_hash   )], [sort_str(qw/0 foo/)]);
-    is_deeply2([sort_str(each @_hash   )], [sort_str(qw/1 Foo/)]);
-    is_deeply2([sort_str(each $_hashref)], [sort_str(qw/0 foo/)]);
-    is_deeply2([sort_str(each $_hashref)], [sort_str(qw/1 Foo/)]);
+    is_deeply2([_sort(each @_hash   )], [_sort(qw/0 foo/)]);
+    is_deeply2([_sort(each @_hash   )], [_sort(qw/1 Foo/)]);
+    is_deeply2([_sort(each $_hashref)], [_sort(qw/0 foo/)]);
+    is_deeply2([_sort(each $_hashref)], [_sort(qw/1 Foo/)]);
 };
 
 subtest join => sub {
@@ -161,10 +164,10 @@ subtest map_array => sub {
     my %nums    =  @nums;
     my $nums_hr = {@nums};
 
-    is_deeply2([sort_num(map_array {$_ + 1} @nums   )], [1..6]);
-    is_deeply2([sort_num(map_array {$_ + 1} $nums   )], [1..6]);
-    is_deeply2([sort_num(map_array {$_ + 1} %nums   )], [1..6]);
-    is_deeply2([sort_num(map_array {$_ + 1} $nums_hr)], [1..6]);
+    is_deeply2([_sort(map_array {$_ + 1} @nums   )], [1..6]);
+    is_deeply2([_sort(map_array {$_ + 1} $nums   )], [1..6]);
+    is_deeply2([_sort(map_array {$_ + 1} %nums   )], [1..6]);
+    is_deeply2([_sort(map_array {$_ + 1} $nums_hr)], [1..6]);
 };
 
 subtest grep_array => sub {
@@ -173,18 +176,10 @@ subtest grep_array => sub {
     my %nums    =  @nums;
     my $nums_hr = {@nums};
 
-    is_deeply2([sort_num(grep_array {$_ % 2 == 0} @nums   )], [0, 2, 4]);
-    is_deeply2([sort_num(grep_array {$_ % 2 == 0} $nums   )], [0, 2, 4]);
-    is_deeply2([sort_num(grep_array {$_ % 2 == 0} %nums   )], [0, 2, 4]);
-    is_deeply2([sort_num(grep_array {$_ % 2 == 0} $nums_hr)], [0, 2, 4]);
+    is_deeply2([_sort(grep_array {$_ % 2 == 0} @nums   )], [0, 2, 4]);
+    is_deeply2([_sort(grep_array {$_ % 2 == 0} $nums   )], [0, 2, 4]);
+    is_deeply2([_sort(grep_array {$_ % 2 == 0} %nums   )], [0, 2, 4]);
+    is_deeply2([_sort(grep_array {$_ % 2 == 0} $nums_hr)], [0, 2, 4]);
 };
-
-sub is_deeply2 {
-    my ($got, $expected) = @_;
-    is dump($got), dump($expected);
-}
-
-sub sort_num { CORE::sort {$a <=> $b} @_ }
-sub sort_str { CORE::sort {$a cmp $b} @_ }
 
 done_testing;
