@@ -10,19 +10,21 @@ our %EXPORT_TAGS = (
 );
 use subs @EXPORT_OK;
 
+sub _to_ref { (ref($_[0]) eq 'REF') ? ${$_[0]} : $_[0]; }
+
 sub push (\[$@]@) {
-    my ($arrayref, @list) = (_to_listref(CORE::shift), @_);
+    my ($arrayref, @list) = (_to_ref(CORE::shift), @_);
     CORE::push @$arrayref, @list;
 }
 
 sub unshift (\[$@]@) {
-    my ($arrayref, @list) = (_to_listref(CORE::shift), @_);
+    my ($arrayref, @list) = (_to_ref(CORE::shift), @_);
     CORE::unshift @$arrayref, @list;
 }
 
 sub pop (;\[$@]) {
     if (@_) {
-        my ($arrayref) = _to_listref(CORE::pop);
+        my ($arrayref) = _to_ref(CORE::pop);
         CORE::pop @$arrayref;
     } else {
         # in subroutine
@@ -40,7 +42,7 @@ sub pop (;\[$@]) {
 
 sub shift (;\[$@]) {
     if (@_) {
-        my ($arrayref) = _to_listref(CORE::shift);
+        my ($arrayref) = _to_ref(CORE::shift);
         CORE::shift @$arrayref;
     } else {
         # in subroutine
@@ -57,7 +59,7 @@ sub shift (;\[$@]) {
 }
 
 sub splice (\[$@];$$@) {
-    my ($arrayref, $offset, $length, @list) = (_to_listref(CORE::shift), @_);
+    my ($arrayref, $offset, $length, @list) = (_to_ref(CORE::shift), @_);
     
     if (!defined($offset)) {
         CORE::splice @$arrayref;
@@ -74,24 +76,20 @@ sub splice (\[$@];$$@) {
 }
 
 sub keys (\[$@%]) {
-    my ($listref) = _to_listref(CORE::shift);
-    ref($listref) eq 'HASH' ? CORE::keys %$listref
-                            : CORE::keys @$listref;
+    my ($list) = _to_ref(CORE::shift);
+    ref($list) eq 'HASH' ? CORE::keys %$list
+                         : CORE::keys @$list;
 }
 sub values (\[$@%]) {
-    my ($listref) = _to_listref(CORE::shift);
-    ref($listref) eq 'HASH' ? CORE::values %$listref
-                            : CORE::values @$listref;
+    my ($list) = _to_ref(CORE::shift);
+    ref($list) eq 'HASH' ? CORE::values %$list
+                         : CORE::values @$list;
 }
 
 sub each (\[$@%]) {
-    my ($listref) = _to_listref(CORE::shift);
-    ref($listref) eq 'HASH' ? CORE::each %$listref
-                            : CORE::each @$listref;
-}
-
-sub _to_listref {
-    (ref($_[0]) eq 'REF') ? ${$_[0]} : $_[0];
+    my ($list) = _to_ref(CORE::shift);
+    ref($list) eq 'HASH' ? CORE::each %$list
+                         : CORE::each @$list;
 }
 
 1;
