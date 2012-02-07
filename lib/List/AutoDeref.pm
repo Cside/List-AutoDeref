@@ -4,11 +4,28 @@ use strict;
 use warnings;
 our $VERSION = '0.02';
 use parent qw/Exporter/;
-our @EXPORT_OK = qw/pop push shift unshift splice keys values each join map_array grep_array/;
+my @V5_14_0 = qw/pop push shift unshift splice keys values each/;
+my @ALL     = (@V5_14_0, qw/join map_array grep_array/);
+our @EXPORT_OK = @ALL;
 our %EXPORT_TAGS = (
-    all => \@EXPORT_OK,
+    all      => \@ALL,
+    '5.14.0' => \@V5_14_0,
 );
 use subs @EXPORT_OK;
+
+sub unimport {
+    my $caller = caller;
+    no strict 'refs';
+    no warnings 'redefine';
+    no warnings 'prototype';
+    for my $sub (@ALL) {
+        if ($sub =~ /^(?:map_array|grep_array)$/) {
+            delete ${"$caller\::"}{$sub};
+        } else {
+            *{"$caller\::$sub"} = \&{"CORE::$sub"};
+        }
+    }
+}
 
 sub _to_ref { (ref($_[0]) eq 'REF') ? ${$_[0]} : $_[0]; }
 
